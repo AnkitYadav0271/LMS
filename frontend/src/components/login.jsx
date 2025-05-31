@@ -1,6 +1,9 @@
 import {Button} from "@/components/ui/Button.jsx";
 import {useReducer} from "react";
+import {useLoginUserMutation} from "@/features/api/authApi.js";
+import {  toast } from 'react-toastify';
 
+//eQ8jvhrCeWz4PK06
 
 export const Login =()=>{
 
@@ -21,7 +24,10 @@ export const Login =()=>{
         }
     }
     const [state,dispatch] = useReducer(reducer,initialState);
-
+    const [loginUser,{data,error,isLoading,isSuccess}] = useLoginUserMutation();
+    console.log(":isSuccess",isSuccess);
+    console.log("isError",error)
+    console.log("data is here",data)
     //handleChange is here
      function handleChange(e){
          dispatch({
@@ -33,13 +39,25 @@ export const Login =()=>{
 
      //handleSubmit is here
 
-    const handleSubmit = (e)=>{
-         dispatch({
-             type:"RESET"
-         })
-         e.preventDefault();
-         console.log(state);
-         alert("Form Submitted Successfully")
+    const handleSubmit = async (e)=>{
+
+        e.preventDefault();
+        dispatch({
+            type:"RESET"
+        })
+       loginUser(state);
+        if(isSuccess){
+            toast.success(`welcome back ${data.user.fullName}`);
+        }
+        if (error.status > 200){
+
+            toast.error(error.data.message || "Some error happened");
+
+        }
+
+
+
+
     }
 
     return (
@@ -53,7 +71,7 @@ export const Login =()=>{
                 <input id={`email`} type="email"  name="email" placeholder="sample@email.com" className={`p-2`} onChange={handleChange} value={state.email} />
                 <label htmlFor="password" className={`font-semibold p-2`}>Password</label>
                 <input id={`password`} name={`password`} type={`password`} placeholder={`enter password`} className={`p-2`} onChange={handleChange} value={state.password} />
-                <Button className={`p-2 h-8`} onClick={handleSubmit} type="submit">Login</Button>
+                <Button className={`p-2 h-8`} onClick={handleSubmit} disabled={isLoading} type="submit">{isLoading ? 'Loading':"login"}</Button>
             </form>
 
         </div>

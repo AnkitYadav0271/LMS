@@ -4,7 +4,7 @@ import {Login} from "@/components/login.jsx";
 import {Signup} from "@/components/signup.jsx";
 
 
-export const LoginSignupTabSwitch = ()=>{
+export const LoginSignup = ()=>{
     const [currentTab,setTab] = useState("login");
     console.log(currentTab);
     return(
